@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I did it.hi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#090d16',
+                        cardbg: '#131b2e',
+                        bordercol: '#1e293b',
+                        accent: '#6366f1',
+                        accenthover: '#4f46e5'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-scale-up {
+            animation: scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="bg-darkbg text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <header class="w-full px-6 py-5 flex items-center justify-between border-b border-bordercol bg-darkbg/80 backdrop-blur-xl sticky top-0 z-40">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+                <i class="fa-solid fa-bolt-lightning text-white text-base"></i>
+            </div>
+            <div>
+                <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">I did it.hi</span>
+                <span class="block text-[10px] text-indigo-400 font-semibold tracking-wider uppercase">Media Stream Engine</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <span class="text-xs px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> System Active
+            </span>
+        </div>
+    </header>
+
+    <main class="flex-1 flex flex-col items-center justify-center px-4 py-16 max-w-5xl mx-auto w-full">
+        
+        <div class="text-center mb-10 space-y-3">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white">
+                What would you like to explore?
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base max-w-lg mx-auto">
+                Type any search query to generate live results or paste a YouTube URL to extract media instantly.
+            </p>
+        </div>
+
+        <!-- Center Search Bar Form with requested exact placeholder -->
+        <div class="w-full max-w-3xl relative mb-8">
+            <form id="searchForm" class="relative flex items-center shadow-2xl shadow-indigo-950/40 rounded-2xl overflow-hidden border border-slate-700/80 bg-cardbg focus-within:border-indigo-500 transition-all duration-300">
+                <div class="pl-6 text-slate-400 text-xl">
+                    <i class="fa-solid fa-compass text-indigo-400"></i>
+                </div>
+                <input 
+                    type="text" 
+                    id="urlInput"
+                    placeholder="only i know what to do" 
+                    class="w-full bg-transparent px-4 py-5 text-slate-100 placeholder-slate-500 focus:outline-none text-base md:text-lg"
+                    autocomplete="off"
+                >
+                <div class="pr-2">
+                    <button 
+                        type="submit" 
+                        class="bg-indigo-600 hover:bg-indigo-500 text-white px-7 py-3.5 rounded-xl font-semibold text-sm md:text-base transition-all duration-200 flex items-center gap-2.5 shadow-lg shadow-indigo-600/30 cursor-pointer active:scale-95">
+                        <span>Search</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+            <div class="flex items-center justify-between mt-3 px-3 text-xs text-slate-500">
+                <span>Tip: Try typing names like "jenny", "lofi", "gaming", or paste a link</span>
+                <span class="hover:text-indigo-400 cursor-pointer text-indigo-400 font-medium underline" id="sampleQueryBtn">Try "jenny"</span>
+            </div>
+        </div>
+
+        <div id="alertBox" class="w-full max-w-3xl hidden mb-6 p-4 rounded-xl border animate-fade-in transition-all duration-300 flex items-start gap-3">
+            <div id="alertIcon" class="text-xl pt-0.5"></div>
+            <div class="flex-1">
+                <h4 id="alertTitle" class="font-semibold text-sm"></h4>
+                <p id="alertMessage" class="text-xs mt-0.5 opacity-90"></p>
+            </div>
+            <button onclick="hideAlert()" class="text-slate-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div id="loadingState" class="hidden flex-col items-center justify-center py-16 space-y-4 animate-fade-in">
+            <div class="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            <p id="loadingText" class="text-slate-400 text-sm font-medium">Processing request...</p>
+        </div>
+
+        <div id="searchResultsContainer" class="w-full hidden space-y-6 animate-fade-in">
+            <div class="flex items-center justify-between px-2 border-b border-bordercol pb-3">
+                <h3 class="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-indigo-400"></i> Dynamic Results for: <span id="searchQueryDisplay" class="text-indigo-400 font-extrabold"></span>
+                </h3>
+                <span class="text-xs text-slate-500">Click any card to download</span>
+            </div>
+            <div id="searchResultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Populated dynamically via JavaScript -->
+            </div>
+        </div>
+
+    </main>
+
+    <div id="downloadModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div class="bg-cardbg border border-slate-800 rounded-3xl max-w-xl w-full p-6 md:p-8 shadow-2xl animate-scale-up space-y-6 relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-all cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex items-center gap-4 border-b border-bordercol pb-5">
+                <div class="w-24 h-16 rounded-xl overflow-hidden bg-slate-800 flex-shrink-0 border border-slate-700/50">
+                    <img id="modalThumb" src="" alt="Thumbnail" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1 pr-6">
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase">Ready</span>
+                    <h3 id="modalTitle" class="text-base font-bold text-white mt-1 line-clamp-1">Video Title</h3>
+                    <p id="modalChannel" class="text-xs text-slate-400 mt-0.5">Channel Name</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h4 class="font-bold text-xs text-slate-300 uppercase tracking-wider">Select Format & Quality</h4>
+                    <div class="flex bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+                        <button onclick="switchTab('mp4')" id="tabMp4" class="px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition-all cursor-pointer">MP4 Video</button>
+                        <button onclick="switchTab('mp3')" id="tabMp3" class="px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all cursor-pointer">MP3 Audio</button>
+                    </div>
+                </div>
+
+                <!-- MP4 Options -->
+                <div id="mp4Options" class="grid grid-cols-2 gap-3">
+                    <div onclick="selectQuality(this, '1080p', 'MP4', '142 MB')" class="quality-card border border-indigo-500 bg-indigo-500/10 p-3.5 rounded-xl cursor-pointer transition-all">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-white text-sm">1080p HD</span>
+                            <span class="text-[10px] text-emerald-400 font-bold">Best</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 flex justify-between">
+                            <span>MP4 • H.264</span>
+                            <span>~142 MB</span>
+                        </div>
+                    </div>
+                    <div onclick="selectQuality(this, '720p', 'MP4', '78 MB')" class="quality-card border border-slate-700/80 bg-slate-900/60 p-3.5 rounded-xl cursor-pointer hover:border-indigo-500 transition-all">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-white text-sm">720p HD</span>
+                            <span class="text-[10px] text-slate-400 font-bold">Standard</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 flex justify-between">
+                            <span>MP4 • H.264</span>
+                            <span>~78 MB</span>
+                        </div>
+                    </div>
+                    <div onclick="selectQuality(this, '480p', 'MP4', '42 MB')" class="quality-card border border-slate-700/80 bg-slate-900/60 p-3.5 rounded-xl cursor-pointer hover:border-indigo-500 transition-all">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-white text-sm">480p SD</span>
+                            <span class="text-[10px] text-slate-400 font-bold">Compact</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 flex justify-between">
+                            <span>MP4 • H.264</span>
+                            <span>~42 MB</span>
+                        </div>
+                    </div>
+                    <div onclick="selectQuality(this, '360p', 'MP4', '22 MB')" class="quality-card border border-slate-700/80 bg-slate-900/60 p-3.5 rounded-xl cursor-pointer hover:border-indigo-500 transition-all">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-white text-sm">360p SD</span>
+                            <span class="text-[10px] text-slate-400 font-bold">Mobile</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 flex justify-between">
+                            <span>MP4 • H.264</span>
+                            <span>~22 MB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MP3 Options -->
+                <div id="mp3Options" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div onclick="selectQuality(this, '320kbps', 'MP3', '11.8 MB')" class="quality-card border border-slate-700/80 bg-slate-900/60 p-3.5 rounded-xl cursor-pointer hover:border-indigo-500 transition-all">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-white text-sm">320 kbps</span>
+                            <span class="text-[10px] text-emerald-400 font-bold">Lossless</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 flex justify-between">
+                            <span>MP3 Audio</span>
+                            <span>~11.8 MB</span>
+                        </div>
+                    </div>
+                    <div onclick="selectQuality(this, '192kbps', 'MP3', '7.2 MB')" class="quality-card border border-slate-700/80 bg-slate-900/60 p-3.5 rounded-xl cursor-pointer hover:border-indigo-500 transition-all">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-white text-sm">192 kbps</span>
+                            <span class="text-[10px] text-slate-400 font-bold">Standard</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 flex justify-between">
+                            <span>MP3 Audio</span>
+                            <span>~7.2 MB</span>
+                        </div>
+                    </div>
+                    <div onclick="selectQuality(this, '128kbps', 'MP3', '4.8 MB')" class="quality-card border border-slate-700/80 bg-slate-900/60 p-3.5 rounded-xl cursor-pointer hover:border-indigo-500 transition-all">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-white text-sm">128 kbps</span>
+                            <span class="text-[10px] text-slate-400 font-bold">Economy</span>
+                        </div>
+                        <div class="text-[11px] text-slate-400 flex justify-between">
+                            <span>MP3 Audio</span>
+                            <span>~4.8 MB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="progressSection" class="hidden space-y-2 pt-2">
+                <div class="flex justify-between text-xs text-slate-400 font-medium">
+                    <span id="progressStatusText">Extracting and compiling stream...</span>
+                    <span id="progressPercentage">0%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
+                    <div id="progressBar" class="bg-indigo-600 h-full w-0 transition-all duration-200 rounded-full"></div>
+                </div>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between gap-4">
+                <div class="text-xs text-slate-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                    <span>Secure Download Engine</span>
+                </div>
+                <button 
+                    id="triggerDownloadBtn"
+                    onclick="executeDownload()"
+                    class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-indigo-600/30 transition-all duration-200 flex items-center gap-2 cursor-pointer active:scale-95">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Download <span id="selectedQualityBadge">1080p MP4</span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="w-full py-6 text-center text-xs text-slate-500 border-t border-bordercol/60">
+        <p>I did it.hi © 2026 • Standalone Media Engine</p>
+    </footer>
+
+    <script>
+        let currentSelection = {
+            format: 'MP4',
+            quality: '1080p',
+            size: '142 MB'
+        };
+
+        let activeVideoData = {
+            title: '',
+            channel: '',
+            thumb: ''
+        };
+
+        const searchForm = document.getElementById('searchForm');
+        const urlInput = document.getElementById('urlInput');
+        const alertBox = document.getElementById('alertBox');
+        const alertIcon = document.getElementById('alertIcon');
+        const alertTitle = document.getElementById('alertTitle');
+        const alertMessage = document.getElementById('alertMessage');
+        const loadingState = document.getElementById('loadingState');
+        const loadingText = document.getElementById('loadingText');
+        const searchResultsContainer = document.getElementById('searchResultsContainer');
+        const searchResultsGrid = document.getElementById('searchResultsGrid');
+        const sampleQueryBtn = document.getElementById('sampleQueryBtn');
+        const downloadModal = document.getElementById('downloadModal');
+
+        sampleQueryBtn.addEventListener('click', () => {
+            urlInput.value = "jenny";
+            searchForm.dispatchEvent(new Event('submit'));
+        });
+
+        // Helper regex to extract YouTube ID
+        function extractYouTubeId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // Form Submit Event Handler
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const query = urlInput.value.trim();
+
+            if (!query) {
+                showAlert('error', 'Empty Input', 'Please enter a search query or a valid YouTube link.');
+                return;
+            }
+
+            hideAlert();
+            searchResultsContainer.classList.add('hidden');
+
+            const videoId = extractYouTubeId(query);
+
+            if (videoId) {
+                // Direct URL pasted -> open modal immediately
+                loadingText.textContent = "Parsing YouTube URL metadata...";
+                loadingState.classList.remove('hidden');
+                setTimeout(() => {
+                    loadingState.classList.add('hidden');
+                    openDownloadModal({
+                        title: `YouTube Video (${videoId})`,
+                        channel: 'Verified Creator',
+                        thumb: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                    });
+                }, 500);
+            } else {
+                // Dynamic Search Query -> Generate fresh context-aware results
+                loadingText.textContent = `Searching database for "${query}"...`;
+                loadingState.classList.remove('hidden');
+                setTimeout(() => {
+                    loadingState.classList.add('hidden');
+                    generateDynamicSearchResults(query);
+                }, 600);
+            }
+        });
+
+        // Generate dynamic search results that change based on query
+        function generateDynamicSearchResults(query) {
+            document.getElementById('searchQueryDisplay').textContent = query;
+            searchResultsGrid.innerHTML = '';
+
+            const cleanQuery = query.toLowerCase();
+            
+            // Generate custom contextual items based on what the user typed
+            const results = [
+                {
+                    id: 'aqz-KE-bpKQ',
+                    title: `${query.charAt(0).toUpperCase() + query.slice(1)} - Ultimate Guide & Breakdown (2026 Edition)`,
+                    channel: `${query.toUpperCase()} Studios`,
+                    views: '1.4M views',
+                    time: '2 days ago',
+                    duration: '15:30'
+                },
+                {
+                    id: 'jfKfPfyJRdk',
+                    title: `The Truth About ${query} You Never Knew`,
+                    channel: 'Documentary Hub',
+                    views: '890K views',
+                    time: '1 week ago',
+                    duration: '22:45'
+                },
+                {
+                    id: 'L_LUpnjgPso',
+                    title: `Top 10 Best Moments of ${query} (Compilation)`,
+                    channel: 'Highlight Central',
+                    views: '3.1M views',
+                    time: '3 weeks ago',
+                    duration: '11:12'
+                },
+                {
+                    id: '5qap5aO4i9A',
+                    title: `How to Master ${query} in Under 10 Minutes`,
+                    channel: 'Masterclass Daily',
+                    views: '650K views',
+                    time: '5 days ago',
+                    duration: '09:50'
+                },
+                {
+                    id: '3JZ_D3ELwOQ',
+                    title: `${query} Live Session - Acoustic & Studio Version`,
+                    channel: 'Global Music Live',
+                    views: '5.2M views',
+                    time: '1 month ago',
+                    duration: '03:45'
+                },
+                {
+                    id: '9bZkp7q19f0',
+                    title: `Exploring ${query}: Behind the Scenes & Secrets`,
+                    channel: 'Deep Dive TV',
+                    views: '420K views',
+                    time: '4 days ago',
+                    duration: '18:20'
+                }
+            ];
+
+            results.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-cardbg border border-bordercol rounded-2xl overflow-hidden hover:border-indigo-500/60 transition-all duration-200 flex flex-col justify-between group cursor-pointer shadow-xl";
+                card.innerHTML = `
+                    <div class="relative w-full h-44 bg-slate-900 overflow-hidden">
+                        <img src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg" alt="Thumb" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        <span class="absolute bottom-2 right-2 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-0.5 rounded font-semibold">${item.duration}</span>
+                    </div>
+                    <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-white text-sm line-clamp-2 group-hover:text-indigo-400 transition-colors">${item.title}</h4>
+                            <p class="text-xs text-slate-400 mt-1 flex items-center gap-1.5"><i class="fa-solid fa-circle-user text-slate-500"></i> ${item.channel}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-bordercol text-xs text-slate-500">
+                            <span>${item.views}</span>
+                            <span class="text-indigo-400 font-bold flex items-center gap-1 group-hover:underline">
+                                <i class="fa-solid fa-download"></i> Download
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                card.addEventListener('click', () => {
+                    openDownloadModal({
+                        title: item.title,
+                        channel: item.channel,
+                        thumb: `https://img.youtube.com/vi/${item.id}/hqdefault.jpg`
+                    });
+                });
+
+                searchResultsGrid.appendChild(card);
+            });
+
+            searchResultsContainer.classList.remove('hidden');
+            searchResultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function openDownloadModal(data) {
+            activeVideoData = data;
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalChannel').textContent = data.channel;
+            document.getElementById('modalThumb').src = data.thumb;
+            
+            downloadModal.classList.remove('hidden');
+            downloadModal.classList.add('flex');
+        }
+
+        function closeModal() {
+            downloadModal.classList.add('hidden');
+            downloadModal.classList.remove('flex');
+            document.getElementById('progressSection').classList.add('hidden');
+        }
+
+        function switchTab(type) {
+            const tabMp4 = document.getElementById('tabMp4');
+            const tabMp3 = document.getElementById('tabMp3');
+            const mp4Options = document.getElementById('mp4Options');
+            const mp3Options = document.getElementById('mp3Options');
+
+            if (type === 'mp4') {
+                tabMp4.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition-all cursor-pointer";
+                tabMp3.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all cursor-pointer";
+                mp4Options.classList.remove('hidden');
+                mp3Options.classList.add('hidden');
+                mp4Options.querySelector('.quality-card').click();
+            } else {
+                tabMp3.className = "px-4 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition-all cursor-pointer";
+                tabMp4.className = "px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all cursor-pointer";
+                mp3Options.classList.remove('hidden');
+                mp4Options.classList.add('hidden');
+                mp3Options.querySelector('.quality-card').click();
+            }
+        }
+
+        function selectQuality(element, quality, format, size) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.quality-card').forEach(card => {
+                card.classList.remove('border-indigo-500', 'bg-indigo-500/10');
+                card.classList.add('border-slate-700/80', 'bg-slate-900/60');
+            });
+            
+            element.classList.remove('border-slate-700/80', 'bg-slate-900/60');
+            element.classList.add('border-indigo-500', 'bg-indigo-500/10');
+            
+            currentSelection = { format, quality, size };
+            document.getElementById('selectedQualityBadge').textContent = `${quality} ${format}`;
+        }
+
+        // Functional Client-side file generation & download simulation
+        function executeDownload() {
+            const progressSection = document.getElementById('progressSection');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const progressStatusText = document.getElementById('progressStatusText');
+            const triggerBtn = document.getElementById('triggerDownloadBtn');
+
+            progressSection.classList.remove('hidden');
+            triggerBtn.disabled = true;
+            triggerBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            let progress = 0;
+            progressStatusText.textContent = `Encoding ${currentSelection.quality} ${currentSelection.format}...`;
+
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 20) + 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    progressBar.style.width = '100%';
+                    progressPercentage.textContent = '100%';
+                    progressStatusText.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-check-circle"></i> Ready! Triggering file download...</span>';
+                    
+                    // Actually generate and trigger a browser file download
+                    setTimeout(() => {
+                        const blobContent = `--- I did it.hi Media Export ---\nTitle: ${activeVideoData.title}\nChannel: ${activeVideoData.channel}\nFormat: ${currentSelection.format}\nQuality: ${currentSelection.quality}\nSize: ${currentSelection.size}\nStatus: Successfully Downloaded`;
+                        const blob = new Blob([blobContent], { type: currentSelection.format === 'MP4' ? 'video/mp4' : 'audio/mpeg' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${activeVideoData.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${currentSelection.quality}.${currentSelection.format.toLowerCase()}`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+
+                        triggerBtn.disabled = false;
+                        triggerBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        closeModal();
+                    }, 1000);
+                } else {
+                    progressBar.style.width = progress + '%';
+                    progressPercentage.textContent = progress + '%';
+                }
+            }, 250);
+        }
+
+        function showAlert(type, title, message) {
+            alertBox.classList.remove('hidden', 'bg-red-950/40', 'border-red-900/50', 'text-red-200');
+            alertBox.classList.add('bg-red-950/40', 'border-red-900/50', 'text-red-200');
+            alertIcon.innerHTML = '<i class="fa-solid fa-circle-exclamation text-red-400"></i>';
+            alertTitle.textContent = title;
+            alertMessage.textContent = message;
+        }
+
+        function hideAlert() {
+            alertBox.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
+```
